@@ -1,15 +1,19 @@
 const express = require("express");
 require("dotenv").config();
 const { pool } = require("../db/db");
-const { log } = require("node:console");
+const router = require("./routes/auth");
 
 const app = express();
 app.use(express.json());
+
 const port = 3000;
 
 app.get("/", (req, res) => {
 	res.send(`Hello`);
 });
+
+app.use("/auth", router);
+
 app.get("/health", async (req, res) => {
 	try {
 		await pool.query("SELECT 1");
