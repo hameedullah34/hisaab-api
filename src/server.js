@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const { pool } = require("../db/db");
 
-const authrouter = require("./routes/auth");
+const authrouter = require("./routes/auth.routes");
 
 const app = express();
 app.use(express.json());

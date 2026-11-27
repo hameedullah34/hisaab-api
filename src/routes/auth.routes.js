@@ -1,19 +1,8 @@
 const express = require("express");
-const z = require("zod");
 const argon2 = require("argon2");
 const { pool } = require("../../db/db");
 const jwt = require("jsonwebtoken");
-
-const signupSchema = z.object({
-	name: z.string().trim().min(1, "Name is required"),
-	email: z.string().trim().toLowerCase().email(),
-	password: z.string().min(8).max(64),
-});
-
-const loginSchema = z.object({
-	email: z.string().trim().toLowerCase().email(),
-	password: z.string().min(1, "Password is required"),
-});
+const { signupSchema, loginSchema } = require("../schema/auth.schema.js");
 
 const authrouter = express.Router();
 
