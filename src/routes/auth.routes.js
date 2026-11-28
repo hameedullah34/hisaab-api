@@ -37,7 +37,14 @@ authrouter.post("/login", async (req, res) => {
 	const loginCheck = loginSchema.safeParse(req.body);
 
 	if (!loginCheck.success) {
-		return res.status(400).json({ message: "email or password is required " });
+		return res
+			.status(400)
+			.json({
+				error: {
+					code: "VALIDATION_ERROR",
+					message: "Both are required Fields",
+				},
+			});
 	}
 
 	const availableRows = await pool.query(
@@ -46,7 +53,14 @@ authrouter.post("/login", async (req, res) => {
 	);
 
 	if (availableRows.rows.length === 0) {
-		return res.status(401).json({ message: "invalid credential" });
+		return res
+			.status(401)
+			.json({
+				error: {
+					code: "INVALID_CREDENTIALS",
+					message: "invalid email or password",
+				},
+			});
 	}
 
 	const passwordVerification = await argon2.verify(
@@ -55,7 +69,14 @@ authrouter.post("/login", async (req, res) => {
 	);
 
 	if (!passwordVerification) {
-		return res.status(401).json({ message: "invalid credential" });
+		return res
+			.status(401)
+			.json({
+				error: {
+					code: "INVALID_CREDENTIALS",
+					message: "invalid email or password",
+				},
+			});
 	}
 
 	const token = jwt.sign(
